@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Subscription API</title>
+    <style>
+        body { 
+            font-family: monospace; 
+            padding: 20px; 
+            background: #1a1a1a; 
+            color: #fff;
+        }
+        .section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #444; 
+            border-radius: 5px;
+            background: #2a2a2a;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer; 
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        button:hover { background: #7c3aed; }
+        pre { 
+            background: #000; 
+            padding: 10px; 
+            border-radius: 5px; 
+            overflow-x: auto;
+            color: #10b981;
+        }
+        .error { color: #ef4444; }
+        .success { color: #10b981; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Subscription API Tester</h1>
+    <p>Make sure you're logged in first at <a href="http://localhost:3002/login" style="color: #8b5cf6;">http://localhost:3002/login</a></p>
+
+    <div class="section">
+        <h2>1. Test Customer API</h2>
+        <button onclick="testCustomer()">GET /api/customer</button>
+        <pre id="customer-result">Click button to test...</pre>
+    </div>
+
+    <div class="section">
+        <h2>2. Test Subscription API</h2>
+        <button onclick="testSubscription()">GET /api/subscription</button>
+        <pre id="subscription-result">Click button to test...</pre>
+    </div>
+
+    <div class="section">
+        <h2>3. Migrate Subscription</h2>
+        <button onclick="migrateSubscription()">POST /api/subscription/migrate</button>
+        <pre id="migrate-result">Click button to test...</pre>
+    </div>
+
+    <div class="section">
+        <h2>4. Test Usage API</h2>
+        <button onclick="testUsage()">GET /api/subscription/usage</button>
+        <pre id="usage-result">Click button to test...</pre>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:3002'
+
+        async function testCustomer() {
+            const result = document.getElementById('customer-result')
+            result.textContent = 'Loading...'
+            try {
+                const response = await fetch(`${BASE_URL}/api/customer`, {
+                    credentials: 'include'
+                })
+                const data = await response.json()
+                result.className = response.ok ? 'success' : 'error'
+                result.textContent = `Status: ${response.status}\n\n${JSON.stringify(data, null, 2)}`
+            } catch (error) {
+                result.className = 'error'
+                result.textContent = `Error: ${error.message}`
+            }
+        }
+
+        async function testSubscription() {
+            const result = document.getElementById('subscription-result')
+            result.textContent = 'Loading...'
+            try {
+                const response = await fetch(`${BASE_URL}/api/subscription`, {
+                    credentials: 'include'
+                })
+                const data = await response.json()
+                result.className = response.ok ? 'success' : 'error'
+                result.textContent = `Status: ${response.status}\n\n${JSON.stringify(data, null, 2)}`
+            } catch (error) {
+                result.className = 'error'
+                result.textContent = `Error: ${error.message}`
+            }
+        }
+
+        async function migrateSubscription() {
+            const result = document.getElementById('migrate-result')
+            result.textContent = 'Loading...'
+            try {
+                const response = await fetch(`${BASE_URL}/api/subscription/migrate`, {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                const data = await response.json()
+                result.className = response.ok ? 'success' : 'error'
+                result.textContent = `Status: ${response.status}\n\n${JSON.stringify(data, null, 2)}`
+                
+                if (response.ok) {
+                    setTimeout(() => {
+                        alert('Migration successful! Now test subscription API again.')
+                    }, 500)
+                }
+            } catch (error) {
+                result.className = 'error'
+                result.textContent = `Error: ${error.message}`
+            }
+        }
+
+        async function testUsage() {
+            const result = document.getElementById('usage-result')
+            result.textContent = 'Loading...'
+            try {
+                const response = await fetch(`${BASE_URL}/api/subscription/usage`, {
+                    credentials: 'include'
+                })
+                const data = await response.json()
+                result.className = response.ok ? 'success' : 'error'
+                result.textContent = `Status: ${response.status}\n\n${JSON.stringify(data, null, 2)}`
+            } catch (error) {
+                result.className = 'error'
+                result.textContent = `Error: ${error.message}`
+            }
+        }
+    </script>
+</body>
+</html>
